@@ -1,0 +1,15 @@
+# This is a basic workflow to help you get started with Actions
+name: fake
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: self-hosted
+    steps:
+      - run: echo "Hello, World!"
