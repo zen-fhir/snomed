@@ -17,10 +17,10 @@ jobs:
           fetch-depth: 0
           submodules: 'recursive'
       
-      - run: pwd && ls -halt
-      - run: cd .. && ls -halt
+      - run: export SNOMED_GIT_REPO_PATH=$(pwd)
+
+      - run: echo $SNOMED_GIT_REPO_PATH
       
-          
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
         
