@@ -16,4 +16,11 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
-      - run: touch /tmp/file-from-container
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+      - env:
+          FTR_GCP_BUCKET_SERVICE_ACCOUNT: ${{ secrets.FTR_GCP_BUCKET_SERVICE_ACCOUNT }}
+        run: echo $FTR_GCP_BUCKET_SERVICE_ACCOUNT > ~/service-account.json
+      - run: gcloud auth activate-service-account --key-file=~/service-account.json
+      - run: touch /tmp/file-from-ci.test
+      - run: gsutil cp /tmp/file-from-ci.test gs://ftr
