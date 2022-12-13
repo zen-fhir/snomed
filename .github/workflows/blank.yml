@@ -16,4 +16,4 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
-      - run: ls -halt
+      - run: touch /tmp/file-from-container
