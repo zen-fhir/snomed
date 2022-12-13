@@ -21,6 +21,7 @@ jobs:
       - env:
           FTR_GCP_BUCKET_SERVICE_ACCOUNT: ${{ secrets.FTR_GCP_BUCKET_SERVICE_ACCOUNT }}
         run: echo $FTR_GCP_BUCKET_SERVICE_ACCOUNT > ~/service-account.json
+      - run: ls -halt ~/
       - run: gcloud auth activate-service-account --key-file=~/service-account.json
       - run: touch /tmp/file-from-ci.test
       - run: gsutil cp /tmp/file-from-ci.test gs://ftr
