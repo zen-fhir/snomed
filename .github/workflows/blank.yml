@@ -21,7 +21,7 @@ jobs:
           submodules: 'recursive'
         
       - name: 'Update Docker'
-        run: apt-get -y update && apt-get -y upgrade sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+        run: apt-get -y update && apt-get -y upgrade docker-ce docker-ce-cli containerd.io docker-compose-plugin
       
       - name: 'Write current working directory'
         run: pwd > /tmp/snomed_git_repo_path
