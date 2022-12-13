@@ -16,7 +16,7 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
-      
+      - run: lsb_release
       - run: pwd > /tmp/snomed_git_repo_path
       
       - name: 'Set up Cloud SDK'
