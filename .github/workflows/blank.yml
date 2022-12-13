@@ -23,6 +23,9 @@ jobs:
       - name: 'Update Docker'
         run: apt-get -y update && apt-get -y upgrade docker-ce docker-ce-cli containerd.io docker-compose-plugin
       
+      - name 'Start Docker service'
+        run: service docker start
+      
       - name: 'Write current working directory'
         run: pwd > /tmp/snomed_git_repo_path
       
