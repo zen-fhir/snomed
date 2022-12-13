@@ -19,7 +19,8 @@ jobs:
       
       - run: export SNOMED_GIT_REPO_PATH=$(pwd)
 
-      - run: echo $SNOMED_GIT_REPO_PATH
+      - run: echo $SNOMED_GIT_REPO_PATH > test.json
+      - run: cat test.json
       
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
