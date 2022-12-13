@@ -16,12 +16,24 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
+      
+      - run: pwd
+          
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
-      - env:
+        
+      - name: 'Build service-account.json'
+        env:
           FTR_GCP_BUCKET_SERVICE_ACCOUNT: ${{ secrets.FTR_GCP_BUCKET_SERVICE_ACCOUNT }}
         run: echo $FTR_GCP_BUCKET_SERVICE_ACCOUNT > ~/service-account.json
-      - run: ls -halt ~/
-      - run: gcloud auth activate-service-account --key-file=$HOME/service-account.json
-      - run: touch /tmp/file-from-ci.test
-      - run: gsutil cp /tmp/file-from-ci.test gs://ftr
+        
+      - name: 'Gcloud auth'
+        run: gcloud auth activate-service-account --key-file=$HOME/service-account.json
+        
+      - name: 'Clone FTR repo'
+        run: git clone --recurse-submodules https://github.com/HealthSamurai/ftr.git /tmp/ftr-git-repo
+        
+      - name: 'Spin up Postgres for Snomed build'
+        run: cd /tmp/ftr-git-repo && make up && cd -
+        
+      
