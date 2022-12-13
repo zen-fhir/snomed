@@ -17,7 +17,9 @@ jobs:
           fetch-depth: 0
           submodules: 'recursive'
       
-      - run: pwd
+      - run: pwd && ls -halt
+      - run: cd .. && ls -halt
+      
           
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
