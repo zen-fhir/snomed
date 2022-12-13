@@ -16,7 +16,7 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
-      - run: apt-get update && apt-get upgrade docker
+      - run: apt-get -y update && apt-get -y upgrade docker
       - run: pwd > /tmp/snomed_git_repo_path
       
       - name: 'Set up Cloud SDK'
