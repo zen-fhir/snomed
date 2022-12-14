@@ -11,8 +11,25 @@ on:
 jobs:
   test:
     runs-on: ["self-hosted", "service"]
+
     container:
       image: docker:git
+      
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: ftr
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: ftr
+        ports:
+          - 5125:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
     steps:
       
       - name: 'Add bash, curl, rlwrap, make, python, java'
@@ -49,9 +66,6 @@ jobs:
 
       - name: 'Clone FTR repo'
         run: git clone --recurse-submodules https://github.com/HealthSamurai/ftr.git /tmp/ftr-git-repo
-        
-      - name: 'make up'
-        run: cd /tmp/ftr-git-repo && make up && cd -
         
       - run: git config --global user.email "you@example.com" && git config --global user.name "Your Name"
         
