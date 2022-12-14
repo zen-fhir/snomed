@@ -51,4 +51,6 @@ jobs:
         
       - name: 'Run FTR tests'
         run: cd /tmp/ftr-git-repo && make test && cd -
+        env:
+          JAVA_HOME: $(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
 
