@@ -12,7 +12,7 @@ jobs:
   test:
     runs-on: ["self-hosted", "service"]
     container:
-      image: docker:latest
+      image: docker:git
     steps:
       - run: ls -halt
       - uses: actions/checkout@v3.0.2
