@@ -11,34 +11,47 @@ on:
 jobs:
   test:
     runs-on: self-hosted
-    
-    container: ubuntu:latest
-    
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: ftr
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: ftr
+        ports:
+          - 5125:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
     steps:
       - name: 'Clean-up tmp'
         run:  'rm -rf /tmp/*'
-        
+
       - uses: actions/checkout@v3.0.2
         with:
           fetch-depth: 0
           submodules: 'recursive'
-      
+
       - name: 'Write current working directory'
         run: pwd > /tmp/snomed_git_repo_path
-      
+
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
-        
+
       - name: 'Build service-account.json'
         env:
           FTR_GCP_BUCKET_SERVICE_ACCOUNT: ${{ secrets.FTR_GCP_BUCKET_SERVICE_ACCOUNT }}
         run: echo $FTR_GCP_BUCKET_SERVICE_ACCOUNT > ~/service-account.json
-        
+
       - name: 'Gcloud auth'
         run: gcloud auth activate-service-account --key-file=$HOME/service-account.json
-        
+
       - name: 'Clone FTR repo'
         run: git clone --recurse-submodules https://github.com/HealthSamurai/ftr.git /tmp/ftr-git-repo
         
-      - name: 'Spin up Postgres for Snomed build'
-        run: cd /tmp/ftr-git-repo && make up && cd -
+      - name: 'Run FTR tests'
+        run: cd /tmp/ftr-git-repo && make test
