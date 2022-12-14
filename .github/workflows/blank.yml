@@ -20,7 +20,8 @@ jobs:
           fetch-depth: 0
           submodules: 'recursive'
           
-      - name: apk update && apk upgrade && apk add bash
+      - name: 'Add bash'
+        run: apk update && apk upgrade && apk add bash
 
       - name: 'Write current working directory'
         run: pwd > /tmp/snomed_git_repo_path
