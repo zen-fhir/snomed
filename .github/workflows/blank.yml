@@ -21,7 +21,7 @@ jobs:
           submodules: 'recursive'
           
       - name: 'Add bash'
-        run: apk update && apk upgrade && apk add bash
+        run: apk update && apk upgrade && apk add bash curl
 
       - name: 'Write current working directory'
         run: pwd > /tmp/snomed_git_repo_path
