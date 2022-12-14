@@ -14,5 +14,31 @@ jobs:
     container:
       image: docker:latest
     steps:
-      - run: ls -halt /tmp
-      - run: docker --version
+      - uses: actions/checkout@v3.0.2
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - name: 'Write current working directory'
+        run: pwd > /tmp/snomed_git_repo_path
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
+      - name: 'Build service-account.json'
+        env:
+          FTR_GCP_BUCKET_SERVICE_ACCOUNT: ${{ secrets.FTR_GCP_BUCKET_SERVICE_ACCOUNT }}
+        run: echo $FTR_GCP_BUCKET_SERVICE_ACCOUNT > ~/service-account.json
+
+      - name: 'Gcloud auth'
+        run: gcloud auth activate-service-account --key-file=$HOME/service-account.json
+
+      - name: 'Clone FTR repo'
+        run: git clone --recurse-submodules https://github.com/HealthSamurai/ftr.git /tmp/ftr-git-repo
+        
+      - name: 'make up'
+        run: cd /tmp/ftr-git-repo && make up && cd -
+        
+      - name: 'Run FTR tests'
+        run: cd /tmp/ftr-git-repo && make test && cd -
+
