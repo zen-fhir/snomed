@@ -41,7 +41,10 @@ jobs:
       - name: 'Build service-account.json'
         env:
           FTR_GCP_BUCKET_SERVICE_ACCOUNT: ${{ secrets.FTR_GCP_BUCKET_SERVICE_ACCOUNT }}
-        run: echo $FTR_GCP_BUCKET_SERVICE_ACCOUNT > $HOME/service-account.json
+          DEBUG_ENVA: 'test_debug'
+        run: echo $FTR_GCP_BUCKET_SERVICE_ACCOUNT > $HOME/service-account.json && echo $DEBUG_ENVA > $HOME/file.txt
+        
+      - run: cat $HOME/file.txt
 
       - name: 'Gcloud auth'
         run: gcloud auth activate-service-account --key-file=$HOME/service-account.json
