@@ -34,7 +34,7 @@ jobs:
         run: docker compose version
         
       - name: 'start docker'
-        run: systemctl start docker
+        run: dockerd
 
       - name: 'Write current working directory'
         run: pwd > /tmp/snomed_git_repo_path
