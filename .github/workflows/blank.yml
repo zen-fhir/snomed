@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: [self-hosted service]
+    runs-on: ["self-hosted", "service"]
     container:
       image: ubuntu:latest
     steps:
