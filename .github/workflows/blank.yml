@@ -66,6 +66,9 @@ jobs:
         
       - name: 'Start PostgreSQL'
         run: chmod 755 /tmp/postgres.sh && su postgres -c /tmp/postgres.sh
+        
+      - name: 'Run FTR tests'
+        run: cd /tmp/ftr-git-repo && make test
       
       - name: 'Publish updated SNOMED FTR and zen package'
         run: |
