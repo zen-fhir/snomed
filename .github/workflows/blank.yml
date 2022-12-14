@@ -30,8 +30,10 @@ jobs:
           fetch-depth: 0
           submodules: 'recursive'
 
-      - name: 'Write current working directory'
-        run: pwd > /tmp/snomed_git_repo_path
+      - name: 'Set env for SNOMED working directory'
+        run: echo "SNOMED_GIT_REPO_PATH=$(pwd)" >> $GITHUB_ENV
+        
+      - run: echo $SNOMED_GIT_REPO_PATH
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
