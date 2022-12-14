@@ -16,8 +16,8 @@ jobs:
       image: docker:git
 
     steps:
-      - name: 'Add apk repo for tmate'
-        run: echo https://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
+      - name: 'Set environment variable for SNOMED working directory'
+        run: echo "SNOMED_GIT_REPO_PATH=$(pwd)" >> $GITHUB_ENV
 
       - name: 'Add bash, curl, rlwrap, make, python, java'
         run: apk update && apk upgrade && apk add bash curl rlwrap make python3 py3-pip openjdk17 postgresql
@@ -29,11 +29,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
-
-      - name: 'Set env for SNOMED working directory'
-        run: echo "SNOMED_GIT_REPO_PATH=$(pwd)" >> $GITHUB_ENV
-        
-      - run: echo $SNOMED_GIT_REPO_PATH
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
@@ -54,7 +49,7 @@ jobs:
       
       - run: cd /tmp/ftr-git-repo && make up && cd -
       
-      - name: 'Create PostgreSQL script'
+      - name: 'Create script for starting PostgreSQL'
         run: |
           cat > /tmp/postgres.sh <<EOF
           #!/bin/sh
@@ -68,11 +63,9 @@ jobs:
           echo "CREATE DATABASE ftr" | psql -h localhost -p 5125
           EOF
         
-      - name: 'Run PostgreSQL'
+      - name: 'Start PostgreSQL'
         run: chmod 755 /tmp/postgres.sh && su postgres -c /tmp/postgres.sh
       
       - name: 'Run FTR tests'
         run: cd /tmp/ftr-git-repo && make test && cd -
-        env:
-          JAVA_HOME: $(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
 
