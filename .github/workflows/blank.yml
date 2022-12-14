@@ -2,11 +2,11 @@
 name: snomed-publish
 
 on:
+  schedule:
+    - cron: 0 0 */1 * *
+  workflow_dispatch:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
-  workflow_dispatch:
 
 jobs:
   test:
@@ -46,7 +46,9 @@ jobs:
       - name: 'Clone FTR repo'
         run: git clone --recurse-submodules https://github.com/HealthSamurai/ftr.git /tmp/ftr-git-repo
         
-      - run: git config --global user.email "you@example.com" && git config --global user.name "Your Name"
+      - run: |
+          git config --global user.email "hello@health-samurai.io" && \
+          git config --global user.name "zen-fhir/snomed GH Action—Release"
       
       - run: cd /tmp/ftr-git-repo && make up && cd -
       
