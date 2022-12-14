@@ -15,8 +15,12 @@ jobs:
       image: docker:git
     steps:
       
-      - name: 'Add bash, curl, rlwrap, make, python'
-        run: apk update && apk upgrade && apk add bash curl rlwrap make python3 py3-pip
+      - name: 'Add bash, curl, rlwrap, make, python, java'
+        run: apk update && apk upgrade && apk add bash curl rlwrap make python3 py3-pip openjdk17
+        
+      - run: echp $JAVA_HOME
+        env:
+          JAVA_HOME: $(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
         
       - name: 'Install clojure'
         run: curl -O https://download.clojure.org/install/linux-install-1.11.1.1208.sh && chmod +x linux-install-1.11.1.1208.sh && ./linux-install-1.11.1.1208.sh
