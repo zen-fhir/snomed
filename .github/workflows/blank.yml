@@ -18,7 +18,7 @@ jobs:
       - name: 'Add bash, curl, rlwrap, make, python, java'
         run: apk update && apk upgrade && apk add bash curl rlwrap make python3 py3-pip openjdk17
         
-      - run: echp $JAVA_HOME
+      - run: echo $JAVA_HOME
         env:
           JAVA_HOME: $(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
         
