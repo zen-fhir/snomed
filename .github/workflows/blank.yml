@@ -19,8 +19,8 @@ jobs:
       - name: 'Add apk repo for tmate'
         run: echo https://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
 
-      - name: 'Add bash, curl, rlwrap, make, python, java, tmate'
-        run: apk update && apk upgrade && apk add bash curl rlwrap make python3 py3-pip openjdk17 tmate
+      - name: 'Add bash, curl, rlwrap, make, python, java'
+        run: apk update && apk upgrade && apk add bash curl rlwrap make python3 py3-pip openjdk17 postgresql
         
       - name: 'Install clojure'
         run: curl -O https://download.clojure.org/install/linux-install-1.11.1.1208.sh && chmod +x linux-install-1.11.1.1208.sh && ./linux-install-1.11.1.1208.sh
@@ -52,8 +52,23 @@ jobs:
       
       - run: cd /tmp/ftr-git-repo && make up && cd -
       
-      - run: tmate -F
+      - name: 'Create PostgreSQL script'
+        run: |
+          cat > /tmp/postgres.sh <<EOF
+          #!/bin/sh
+          
+          initdb -D /var/lib/postgresql/data
+          nohup postgres -p 5125 -D /var/lib/postgresql/data -k /tmp > /dev/null 2>/dev/null &
+          
+          sleep 5
+          echo "CREATE USER ftr password 'ftr'" | psql -h localhost -p 5125
+          echo "ALTER USER ftr WITH SUPERUSER" | psql -h localhost -p 5125
+          echo "CREATE DATABASE ftr" | psql -h localhost -p 5125
+          EOF
         
+      - name: 'Run PostgreSQL'
+        run: chmod 755 /tmp/postgres.sh && su postgres -c /tmp/postgres.sh
+      
       - name: 'Run FTR tests'
         run: cd /tmp/ftr-git-repo && make test && cd -
         env:
