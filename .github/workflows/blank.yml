@@ -11,6 +11,9 @@ on:
 jobs:
   test:
     runs-on: self-hosted
+    
+    container: ubuntu:latest
+    
     steps:
       - name: 'Clean-up tmp'
         run:  'rm -rf /tmp/*'
@@ -19,12 +22,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
-        
-      - name: 'Update Docker'
-        run: apt-get -y update && apt-get -y upgrade docker-ce docker-ce-cli containerd.io docker-compose-plugin
-      
-      - name: 'Start Docker service'
-        run: service docker restart
       
       - name: 'Write current working directory'
         run: pwd > /tmp/snomed_git_repo_path
@@ -45,5 +42,3 @@ jobs:
         
       - name: 'Spin up Postgres for Snomed build'
         run: cd /tmp/ftr-git-repo && make up && cd -
-        
-      
