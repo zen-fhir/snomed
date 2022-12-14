@@ -15,9 +15,8 @@ jobs:
     container:
       image: docker:git
 
-    steps:
-      - name: 'Set environment variable for SNOMED working directory'
-        run: echo "SNOMED_GIT_REPO_PATH=$(pwd)" >> $GITHUB_ENV
+    steps:        
+      - run: cd /tmp
 
       - name: 'Add bash, curl, rlwrap, make, python, java'
         run: apk update && apk upgrade && apk add bash curl rlwrap make python3 py3-pip openjdk17 postgresql
@@ -29,6 +28,9 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
+          
+      - name: 'Set environment variable for SNOMED working directory'
+        run: echo "SNOMED_WORKING_DIR_PATH=$(pwd)" >> $GITHUB_ENV
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
@@ -36,7 +38,6 @@ jobs:
       - name: 'Build service-account.json'
         env:
           FTR_GCP_BUCKET_SERVICE_ACCOUNT: ${{ secrets.FTR_GCP_BUCKET_SERVICE_ACCOUNT }}
-          DEBUG_ENVA: 'test_debug'
         run: echo $FTR_GCP_BUCKET_SERVICE_ACCOUNT > $HOME/service-account.json
 
       - name: 'Gcloud auth'
@@ -66,6 +67,13 @@ jobs:
       - name: 'Start PostgreSQL'
         run: chmod 755 /tmp/postgres.sh && su postgres -c /tmp/postgres.sh
       
-      - name: 'Run FTR tests'
-        run: cd /tmp/ftr-git-repo && make test && cd -
-
+      - name: 'Publish updated SNOMED FTR and zen package'
+        run: |
+          cd /tmp/ftr-git-repo && \
+          clj -X ftr.ci-pipelines.snomed.core/pipeline \
+          :api-key '"'$UMLS_API_KEY'"' \
+          :snomed-object-url '"gs://ftr/snomed"' \
+          :ftr-object-url '"gs://ftr"' \
+          :snomed-working-dir-path '"'$SNOMED_WORKING_DIR_PATH'"'
+        env:
+          UMLS_API_KEY: ${{ secrets.UMLS_API_KEY }}
