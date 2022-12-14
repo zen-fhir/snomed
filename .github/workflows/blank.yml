@@ -53,6 +53,8 @@ jobs:
       - name: 'make up'
         run: cd /tmp/ftr-git-repo && make up && cd -
         
+      - run: git config --global user.email "you@example.com" && git config --global user.name "Your Name"
+        
       - name: 'Run FTR tests'
         run: cd /tmp/ftr-git-repo && make test && cd -
         env:
