@@ -16,13 +16,11 @@ jobs:
       image: docker:git
 
     steps:
-      
-      - name: 'Add bash, curl, rlwrap, make, python, java'
-        run: apk update && apk upgrade && apk add bash curl rlwrap make python3 py3-pip openjdk17
-        
-      - run: echo $JAVA_HOME
-        env:
-          JAVA_HOME: $(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
+      - name: 'Add apk repo for tmate'
+        run: echo https://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
+
+      - name: 'Add bash, curl, rlwrap, make, python, java, tmate'
+        run: apk update && apk upgrade && apk add bash curl rlwrap make python3 py3-pip openjdk17 tmate
         
       - name: 'Install clojure'
         run: curl -O https://download.clojure.org/install/linux-install-1.11.1.1208.sh && chmod +x linux-install-1.11.1.1208.sh && ./linux-install-1.11.1.1208.sh
@@ -42,9 +40,7 @@ jobs:
         env:
           FTR_GCP_BUCKET_SERVICE_ACCOUNT: ${{ secrets.FTR_GCP_BUCKET_SERVICE_ACCOUNT }}
           DEBUG_ENVA: 'test_debug'
-        run: echo $FTR_GCP_BUCKET_SERVICE_ACCOUNT > $HOME/service-account.json && echo $DEBUG_ENVA > $HOME/file.txt
-        
-      - run: cat $HOME/file.txt
+        run: echo $FTR_GCP_BUCKET_SERVICE_ACCOUNT > $HOME/service-account.json
 
       - name: 'Gcloud auth'
         run: gcloud auth activate-service-account --key-file=$HOME/service-account.json
@@ -55,6 +51,8 @@ jobs:
       - run: git config --global user.email "you@example.com" && git config --global user.name "Your Name"
       
       - run: cd /tmp/ftr-git-repo && make up && cd -
+      
+      - run: tmate -F
         
       - name: 'Run FTR tests'
         run: cd /tmp/ftr-git-repo && make test && cd -
