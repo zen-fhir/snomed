@@ -78,8 +78,8 @@ jobs:
           cd /tmp/ftr-git-repo && \
           clj -X ftr.ci-pipelines.snomed.core/pipeline \
           :api-key '"'$UMLS_API_KEY'"' \
-          :snomed-object-url '"gs://ftr/snomed"' \
-          :ftr-object-url '"gs://ftr"' \
-          :snomed-working-dir-path '"'$SNOMED_WORKING_DIR_PATH'"'
+          :gs-object-url '"gs://ftr/snomed"' \
+          :gs-ftr-object-url '"gs://ftr"' \
+          :working-dir-path '"'$SNOMED_WORKING_DIR_PATH'"'
         env:
           UMLS_API_KEY: ${{ secrets.UMLS_API_KEY }}
