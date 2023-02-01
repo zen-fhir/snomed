@@ -77,6 +77,7 @@ jobs:
         env:
           TG_UPDATES_BOT_TOKEN: ${{ secrets.TG_UPDATES_BOT_TOKEN }}
           TG_FTR_UPDATES_CHAT_ID: ${{ secrets.TG_FTR_UPDATES_CHAT_ID }}
+          UMLS_API_KEY: ${{ secrets.UMLS_API_KEY }}
         run: |
           cd /tmp/ftr-git-repo && \
           clj -X ftr.ci-pipelines.snomed.core/pipeline \
@@ -86,5 +87,3 @@ jobs:
           :gs-object-url '"gs://ftr/snomed"' \
           :gs-ftr-object-url '"gs://ftr"' \
           :working-dir-path '"'$SNOMED_WORKING_DIR_PATH'"'
-        env:
-          UMLS_API_KEY: ${{ secrets.UMLS_API_KEY }}
