@@ -74,9 +74,14 @@ jobs:
         run: git config --global --add safe.directory $SNOMED_WORKING_DIR_PATH
       
       - name: 'Publish updated SNOMED FTR and zen package'
+        env:
+          TG_UPDATES_BOT_TOKEN: ${{ secrets.TG_UPDATES_BOT_TOKEN }}
+          TG_FTR_UPDATES_CHAT_ID: ${{ secrets.TG_FTR_UPDATES_CHAT_ID }}
         run: |
           cd /tmp/ftr-git-repo && \
           clj -X ftr.ci-pipelines.snomed.core/pipeline \
+          :tg-bot-token '"'$TG_UPDATES_BOT_TOKEN'"' \
+          :tg-channel-id '"'$TG_FTR_UPDATES_CHAT_ID'"' \
           :api-key '"'$UMLS_API_KEY'"' \
           :gs-object-url '"gs://ftr/snomed"' \
           :gs-ftr-object-url '"gs://ftr"' \
