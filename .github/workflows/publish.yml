@@ -87,3 +87,4 @@ jobs:
           :gs-object-url '"gs://ftr/snomed"' \
           :gs-ftr-object-url '"gs://ftr"' \
           :working-dir-path '"'$SNOMED_WORKING_DIR_PATH'"'
+          :ci-run-url '"https://github.com/'$GITHUB_REPOSITORY'/actions/runs/'$GITHUB_RUN_ID'"'
