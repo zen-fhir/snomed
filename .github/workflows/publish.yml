@@ -50,7 +50,7 @@ jobs:
           git config --global user.email "hello@health-samurai.io" && \
           git config --global user.name "zen-fhir/snomed GH Action—Release"
       
-      - run: cd /tmp/ftr-git-repo && docker compose rm -f && make up && cd -
+      - run: cd /tmp/ftr-git-repo && docker compose rm -v -f && make up && cd -
       
       - name: 'Create script for starting PostgreSQL'
         run: |
