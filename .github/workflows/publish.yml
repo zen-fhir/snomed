@@ -19,9 +19,6 @@ jobs:
       - name: 'Add bash, curl, rlwrap, make, python, java'
         run: apk update && apk upgrade && apk add bash curl rlwrap make python3 py3-pip openjdk17 postgresql
         
-      - name: Try to fail
-        run: exit 1
-        
       - name: 'Install clojure'
         run: curl -O https://download.clojure.org/install/linux-install-1.11.1.1208.sh && chmod +x linux-install-1.11.1.1208.sh && ./linux-install-1.11.1.1208.sh
 
@@ -102,6 +99,6 @@ jobs:
                 curl -X POST "https://api.telegram.org/bot${{ secrets.TG_UPDATES_BOT_TOKEN }}/sendMessage" \
                   -d "chat_id=${{ secrets.TG_FTR_UPDATES_CHAT_ID }}" \
                   -d "parse_mode=HTML" \
-                  -d "text=❌ Pipeline failed prematurely. <a href=\"https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\">See CI run.</a>"
+                  -d "text=❌ SNOMED pipeline failed prematurely. <a href=\"https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\">See CI run.</a>"
               fi
          
