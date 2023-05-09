@@ -82,7 +82,7 @@ jobs:
           UMLS_API_KEY: ${{ secrets.UMLS_API_KEY }}
         run: |
           cd /tmp/ftr-git-repo && \
-          clj -X ftr.ci-pipelines.snomed.core/pipeline \
+          clj -X:pipeline ftr.ci-pipelines.snomed.core/pipeline \
           :tg-bot-token '"'$TG_UPDATES_BOT_TOKEN'"' \
           :tg-channel-id '"'$TG_FTR_UPDATES_CHAT_ID'"' \
           :api-key '"'$UMLS_API_KEY'"' \
